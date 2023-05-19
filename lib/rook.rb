@@ -1,5 +1,5 @@
 class Rook
-  def initialize(colour)
+  def initialize(colour, row, column)
     @colour = colour
     @symbol = symbol_checker(colour)
     @row = row
