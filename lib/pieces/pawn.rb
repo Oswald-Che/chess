@@ -13,9 +13,9 @@ class Pawn
 
   def change_moves
     if @original_postion == true
-      return [[@row + 1, @column], [@row + 2, @column]]
+      [[@row + 1, @column], [@row + 2, @column]]
     else
-      return [[@row + 1, column]]
+      [[@row + 1, column]]
     end
   end
 end

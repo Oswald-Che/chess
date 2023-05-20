@@ -4,6 +4,7 @@ class Rook
     @symbol = symbol_checker(colour)
     @row = row
     @column = column
+    @original_postion = true
   end
 
   def symbol_checker(colour)
