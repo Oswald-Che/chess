@@ -2,6 +2,11 @@ require_relative 'piece'
 
 # class for queen piece
 class Queen < Piece
+
+  def piece_symbol(colour)
+    colour == 'WHITE' ? "\u2655" : "\u265B"
+  end
+
   def create_moves
     moves = []
     row, col = @pos

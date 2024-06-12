@@ -2,6 +2,9 @@ require_relative 'piece'
 
 # class for bishop piece
 class Bishop < Piece
+  def piece_symbol(colour)
+    colour == 'WHITE' ? "\u2657" : "\u265D"
+  end
   def create_moves
     moves = []
     row, col = @pos

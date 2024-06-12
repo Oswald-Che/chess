@@ -1,6 +1,6 @@
 # super class to store chess piece information
 class Piece
-  attr_reader :colour, :symbol, :data, :moved, :moves
+  attr_reader :pos, :colour, :symbol, :moved, :moves
 
   def initialize(pos, colour)
     @pos = pos

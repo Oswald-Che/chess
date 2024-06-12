@@ -4,8 +4,9 @@ require_relative 'piece'
 class Pawn < Piece
 
   def piece_symbol(colour)
+    colour == 'WHITE' ? "\u2659" : "\u265F"
   end
-
+  
   def create_moves
     row, col = @pos
     i = colour != 'WHITE' ? -1 : 1

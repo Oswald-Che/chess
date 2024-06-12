@@ -2,6 +2,10 @@ require_relative 'piece'
 
 # class for rook piece
 class Rook < Piece
+  def piece_symbol(colour)
+    colour == 'WHITE' ? "\u2656" : "\u265C"
+  end
+
   def create_moves
     moves = []
     row, col = @pos
