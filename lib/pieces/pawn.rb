@@ -3,7 +3,7 @@ require_relative 'piece'
 # test for pawn piece
 class Pawn < Piece
   def create_moves
-    row, col = @data
+    row, col = @pos
     i = row > 1 ? -1 : 1
     return [[row + i, col], [row + (i + i), col]] if moved
 
@@ -11,7 +11,7 @@ class Pawn < Piece
   end
 
   def capture_moves
-    row, col = @data
+    row, col = @pos
     [[row + 1, col + 1], [row + 1, col - 1]]
   end
 end
