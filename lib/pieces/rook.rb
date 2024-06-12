@@ -1,7 +1,7 @@
 require_relative 'piece'
 
 # class for rook piece
-class Rook
+class Rook < Piece
   def create_moves
     moves = []
     row, col = @pos

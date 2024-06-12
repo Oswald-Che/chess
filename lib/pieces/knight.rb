@@ -1,7 +1,7 @@
 require_relative 'piece'
 
 # class for knight piece
-class Knight
+class Knight < Piece
   def create_moves
     moves = []
     kinght_deltas.each do |delta|
