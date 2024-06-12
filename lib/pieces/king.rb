@@ -6,14 +6,13 @@ class King < Piece
   end
 
   def create_moves
-    move = []
+    moves = []
     [-1, 1].each do |i|
-      row, col = @data
-      move << [row + i, col]
-      move << [row, col + i]
-      move << [row + i, col + i]
-      move << [row + i, col - i]
+      row, col = @pos
+      [[row + i, col], [row, col + i], [row + i, col + i], [row + i, col - i]].each do |move|
+        moves << move if move.all? { |i| i.between?(0, 7) }
+      end
     end
-    move - [@data]
+    moves - [@data]
   end
 end
