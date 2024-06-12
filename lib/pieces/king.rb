@@ -5,6 +5,7 @@ class King < Piece
     colour == 'WHITE' ? "\u2654" : "\u265A"
   end
 
+  # generate a set of possible moves based on position
   def create_moves
     moves = []
     [-1, 1].each do |i|
