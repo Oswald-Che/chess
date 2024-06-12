@@ -4,7 +4,7 @@ class Piece
 
   def initialize(pos, colour)
     @pos = pos
-    @colour = colour
+    @colour = colour.upcase
     @symbol = piece_symbol(colour)
     @moves = []
     @moved = false
@@ -20,6 +20,8 @@ class Piece
       @moves << move unless yield(move)
     end
   end
+
+  def piece_symbol(colour) end
 
   def create_moves() end
 end

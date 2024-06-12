@@ -4,7 +4,7 @@ require './lib/pieces/king'
 
 describe King do
   describe '#create_moves' do
-    context 'when the king has a position of 4,4' do
+    context 'when the king has a position of 3,3' do
       subject(:king_move) { described_class.new([3, 3], 'white') }
 
       it 'returns the correct moves' do

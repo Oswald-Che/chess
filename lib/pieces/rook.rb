@@ -6,9 +6,9 @@ class Rook < Piece
     moves = []
     row, col = @pos
     8.times do |i|
-      moves << [row + i, col]
-      moves << [row, col + i]
+      moves << [row + i - row, col]
+      moves << [row, col + i - col]
     end
-    moves - [@data]
+    moves - [@pos]
   end
 end
