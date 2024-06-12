@@ -12,6 +12,11 @@ class Piece
 
   def update_position(pos)
     @data = pos
+    @moved = true
+  end
+
+  def name
+    self.class.name
   end
 
   def add_moves

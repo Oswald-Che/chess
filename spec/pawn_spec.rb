@@ -70,4 +70,12 @@ describe Pawn do
       end
     end
   end
+
+  describe '#name' do
+    subject(:pawn_name) { described_class.new(nil, 'white') }
+
+    it 'returns class name' do
+      expect(pawn_name.name).to eq('Pawn')
+    end
+  end
 end
