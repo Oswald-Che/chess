@@ -2,8 +2,8 @@
 class Board
   attr_reader :empty, :board
 
-  def initialize
-    @empty = '_'
+  def initialize(empty = '_')
+    @empty = empty
     @board = Array.new(8) { Array.new(8, @empty) }
   end
 
@@ -25,5 +25,23 @@ class Board
   def update_board(pos, piece)
     row, col = pos
     @board[row][col] = piece
+  end
+
+
+  def make_move
+    @board.each do |row|
+      row.each do |piece|
+        next if piece == empty
+
+        fix_moves(piece)
+      end
+    end
+  end
+
+  def fix_moves(piece)
+    piece.add_moves do |row, col|
+      return piece_moves(piece, [row, col]) if board[row][col] != empty
+      false
+    end
   end
 end

@@ -3,8 +3,11 @@ require_relative 'board'
 
 # class to organise all game pieces and the board
 class GameBoard
-  def initialize(board = Board.new)
-    @board = board
+  attr_reader :empty
+
+  def initialize()
+    empty = '_'
+    @board = Board.new(empty)
   end
 
   def fill_board
@@ -21,6 +24,46 @@ class GameBoard
     @board.fill(Knight.new([num, 1], colour), Knight.new([num, 6], colour))
     8.times do |i|
       @board.fill(Pawn.new([num + ((-1)**num), i], colour)) # changes starting row depending on the colour of piece
+    end
+  end
+
+  def make_move
+    @board.each do |row|
+      row.each do |piece|
+        next if piece == empty
+
+        check_moves(piece)
+      end
+    end
+  end
+
+  def check_moves(piece)
+    case piece.name.downcase
+    when 'bishop', 'rook', 'queen' then diag_move
+    when 'knight', 'king'
+      normal(piece)
+    else starting
+    end
+  end
+
+  # checks if any piece is blocking the piece moves
+  def normal(piece)
+    piece.add_moves do |move|
+      row, col = move
+      item = @board[row][col]
+      next(true) if item == empty || item.colour != piece.colour
+
+      false
+    end
+  end
+
+  def starting(pawn)
+    pawn.add_moves do |move|
+      row, col = move
+      item = @board[row][col]
+      next(true) if item == empty
+
+      false
     end
   end
 
