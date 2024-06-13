@@ -22,7 +22,7 @@ class Piece
   def add_moves
     moves = create_moves
     moves.each do |move|
-      @moves << move unless yield(move)
+      yield(move)
     end
   end
 

@@ -27,7 +27,6 @@ class Board
     @board[row][col] = piece
   end
 
-
   def make_move
     @board.each do |row|
       row.each do |piece|
@@ -38,10 +37,59 @@ class Board
     end
   end
 
+  # iterate through each move being made and remove unwanted moves
   def fix_moves(piece)
     piece.add_moves do |row, col|
-      return piece_moves(piece, [row, col]) if board[row][col] != empty
+      return piece_moves(piece, row, col) if board[row][col] != empty
+
       false
     end
+  end
+
+  def piece_moves(piece, row, col)
+    case piece.name.downcase
+    when 'queen', 'rook', 'bishop'
+      line_move(piece, row, col)
+    when 'king', 'knight'
+      single_move(piece, row, col)
+    end
+  end
+
+  # checks if move of piece falls on allied or oppenents piece
+  # returns true or false base on result
+  def single_move(piece, row, col)
+    board[row][col].colour != piece.colour
+  end
+  
+  # takes each move and checks checks if move falls between its piece and another piece
+  # returns result
+  def line_move(piece, row, col)
+    matches = find_match(piece)
+    matches.each do |match|
+      next unless same_line?(row, col, match) && between?(row, col, match, piece)
+
+      return piece.colour == board[match[0]][match[1]].colour if match == [row, col]
+
+      return true
+    end
+    false
+  end
+
+  # check if move and match are on the same diagonal
+  def same_line?(row, col, match)
+    (row - match[0]).abs == (col - match[1]) || row == match[0] || col == match[1]
+  end
+
+  # check if move is between piece and match
+  def between?(row, col, match, piece)
+    row.between?(match[0], piece.pos[0]) || col.between?[match[1], piece.pos[2]]
+  end
+
+  # find all possible psotion in which the moves of a piece passing over another piece
+  def find_match(piece, match = [])
+    piece.create_moves.each do |row, col|
+      match << [row, col] if board[row][col] != empty
+    end
+    match
   end
 end
