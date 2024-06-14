@@ -40,15 +40,13 @@ class Board
   # iterate through each move being made and remove unwanted moves
   def fix_moves(piece)
     piece.add_moves do |row, col|
-      return piece_moves(piece, row, col) if board[row][col] != empty
-
-      false
+      piece_moves(piece, row, col) if board[row][col] != empty
     end
   end
 
   def piece_moves(piece, row, col)
     case piece.name.downcase
-    when 'queen', 'rook', 'bishop'
+    when 'queen', 'rook', 'bishop', 'pawn'
       line_move(piece, row, col)
     when 'king', 'knight'
       single_move(piece, row, col)
@@ -60,29 +58,38 @@ class Board
   def single_move(piece, row, col)
     board[row][col].colour != piece.colour
   end
-  
+
   # takes each move and checks checks if move falls between its piece and another piece
   # returns result
-  def line_move(piece, row, col)
+  def line_move(piece, move)
+    bool = true
     matches = find_match(piece)
     matches.each do |match|
-      next unless same_line?(row, col, match) && between?(row, col, match, piece)
+      return false unless same_line?(move, match, piece.pos) && between?(move, match, piece.pos)
 
-      return piece.colour == board[match[0]][match[1]].colour if match == [row, col]
+      if match == move
+        bool = piece.colour != board[match[0]][match[1]].colour
+        return false if piece.name.downcase == 'pawn'
+      end
 
-      return true
     end
-    false
+    bool
   end
 
-  # check if move and match are on the same diagonal
-  def same_line?(row, col, match)
-    (row - match[0]).abs == (col - match[1]) || row == match[0] || col == match[1]
+  # check if move and match are on the line
+  def same_line?(move, match, piece)
+    ((move[0] - match[0]).abs == (move[1] - match[1]).abs || move[0] == match[0] || move[1] == match[1]) &&
+      !between?(piece, match, move)
   end
 
   # check if move is between piece and match
-  def between?(row, col, match, piece)
-    row.between?(match[0], piece.pos[0]) || col.between?[match[1], piece.pos[2]]
+  def between?(move, match, piece)
+    move[0] == match[0] ? include?(move[1], match[1], piece[1]) : include?(move[0], match[0], piece[0])
+  end
+
+  def include?(num1, num2, num3)
+    arr = [num2, num3].sort
+    (arr[0]...arr[1]).include?(num1)
   end
 
   # find all possible psotion in which the moves of a piece passing over another piece
