@@ -34,7 +34,7 @@ class Board
       row.each do |piece|
         next if piece == empty
 
-        fix_moves(piece)
+        fix_moves(piece, @board)
       end
     end
   end

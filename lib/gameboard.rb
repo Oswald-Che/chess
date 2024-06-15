@@ -26,5 +26,5 @@ class GameBoard
       @board.fill(Pawn.new([num + ((-1)**num), i], colour)) # changes starting row depending on the colour of piece
     end
   end
-end
 
+end

@@ -20,6 +20,8 @@ module FixMoves
   # checks if move of piece falls on allied or oppenents piece
   # returns true or false base on result
   def single_move(piece, move, board)
+    return true if board[move[0]][move[1]] == empty
+
     board[move[0]][move[1]].colour != piece.colour
   end
 

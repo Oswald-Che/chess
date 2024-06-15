@@ -16,4 +16,8 @@ class King < Piece
     end
     moves - [@data]
   end
+
+  def remove_move(move)
+    @moves - [move]
+  end
 end
