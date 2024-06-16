@@ -1,11 +1,11 @@
 require 'json'
-# store and load all save files
+# save and load game files
 module Database
-  
+
   def save_game
     Dir.mkdir 'save' unless Dir.exist? 'save'
     filename = "#{input_filename}.json"
-    File.open("save/#{filename}", 'w') do |file| 
+    File.open("save/#{filename}", 'w') do |file|
       file.puts JSON.dump(make_save)
     end
   end
@@ -37,7 +37,7 @@ module Database
     puts "Available saves are \n#{file_list}"
     filename = gets.chomp
     return filename if file_list.include?(filename)
-  
+
     puts 'Save file not found, Please input an available file'
     input_save
   end
@@ -48,7 +48,7 @@ module Database
     load_array.each do |piece|
       gameboard.board << piece if piece == gameboard.empty
 
-      gameboard.update(piece[:name], piece[:pos], piece[:colour])
+      @gameboard.update(piece[:name], piece[:pos], piece[:colour])
     end
   end
 end

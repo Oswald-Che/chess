@@ -3,7 +3,7 @@ require_relative 'board'
 
 # class to organise all game pieces and the board
 class GameBoard
-  attr_reader :empty
+  attr_reader :empty, :board
 
   def initialize()
     empty = '_'
@@ -24,6 +24,21 @@ class GameBoard
     @board.fill(Knight.new([num, 1], colour), Knight.new([num, 6], colour))
     8.times do |i|
       @board.fill(Pawn.new([num + ((-1)**num), i], colour)) # changes starting row depending on the colour of piece
+    end
+  end
+
+  def update(name, pos, colour)
+    @board.board << check_piece(name, pos, colour)
+  end
+
+  def check_piece(name, pos, colour)
+    case name
+    when 'king' then King.new(pos, colour)
+    when 'queen' then Queen.new(pos, colour)
+    when 'rook' then Rook.new(pos, colour)
+    when 'bishop' then Bishop.new(pos, colour)
+    when 'knight' then Queen.new(pos, colour)
+    when 'pawn' then Pawn.new(pos, colour)
     end
   end
 
