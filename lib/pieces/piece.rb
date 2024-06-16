@@ -16,7 +16,7 @@ class Piece
   end
 
   def name
-    self.class.name
+    self.class.name.downcase
   end
 
   def add_moves

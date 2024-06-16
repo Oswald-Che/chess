@@ -29,13 +29,28 @@ class Board
     @board[row][col] = piece
   end
 
-  def make_move
+  def make_moves
     @board.each do |row|
       row.each do |piece|
         next if piece == empty
 
         fix_moves(piece, @board)
+        pawn_capture(piece) if piece.name == 'pawn'
       end
     end
+  end
+
+  def pawn_capture(pawn)
+    pawn.capture_moves do |row, col|
+      board[row][col].nil? || board[row][col] == empty
+    end
+  end
+
+  def move_piece(move)
+    row, col = move[0]
+    piece = @board[row][col]
+    update_baord(move[1], piece)
+    @board[row][col] = empty
+    piece.update_position(move[1])
   end
 end

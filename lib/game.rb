@@ -8,7 +8,7 @@ class Game
   include Database
 
   def initialize(gameboard = GameBoard.new)
-    @game_board = gameboard
+    @gameboard = gameboard
     @colour = nil
   end
 
@@ -16,10 +16,22 @@ class Game
     puts 'Welcome to command Line chess'
   end
 
+  def start
+    introduction
+    load_game
+    play unless game_end
+
+  end
+
   def play
     swap_colour
     puts "#{@colour}'s turn"
-    input = user_input
-    check_input
+    move = user_input
+    board.move_piece(move) if possible_move(move)
   end
+
+  def possible_move(move)
+    @gameboard.possible_move(move)
+  end
+
 end
