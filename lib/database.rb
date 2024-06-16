@@ -4,6 +4,7 @@ module Database
 
   def save_game
     Dir.mkdir 'save' unless Dir.exist? 'save'
+    input_filename = gets.chomp
     filename = "#{input_filename}.json"
     File.open("save/#{filename}", 'w') do |file|
       file.puts JSON.dump(make_save)
@@ -43,7 +44,7 @@ module Database
   end
 
   def load_game
-    load_array = load_save
+    load_array = load_save(input_save)
     @gameboard.board = []
     load_array.each do |piece|
       gameboard.board << piece if piece == gameboard.empty
