@@ -46,11 +46,72 @@ class Board
     end
   end
 
+  def fix_king_moves
+    select_kings.each do |king|
+      king.moves.each do |move|
+        iterate_board do |piece|
+          next unless piece.colour != king.colour && piece.moves.include?(move)
+
+          king.remove_move(move)
+          piece.remove_move(move) if piece.name == 'king'
+        end
+      end
+    end
+  end
+
+  def select_kings(kings = [])
+    iterate_board do |item|
+      kings << item if item.name == 'king'
+    end
+    kings
+  end
+
+  def iterate_board
+    board.flatten.each do |piece|
+      next if piece == empty
+
+      yield(piece)
+    end
+  end
+
   def move_piece(move)
     row, col = move[0]
     piece = @board[row][col]
     update_baord(move[1], piece)
     @board[row][col] = empty
     piece.update_position(move[1])
+  end
+
+  def check
+    select_kings.each do |king|
+      iterate_board do |piece|
+        next if piece.colour == king.colour
+
+        return king, piece if piece.moves.include?(king.pos)
+      end
+    end
+    nil
+  end
+
+  def mate(array, bool = nil)
+    king = array[0]
+    return false if king.moves.any?
+
+    iterate_board do |piece|
+      next if piece.colour != king.colour
+      return false if piece.moves.include?(array[1])
+
+      piece.moves.each { |move| method(king, array[1], move) }
+    end
+  end
+
+  def method(king, piece, move)
+    return false if piece.name == 'knight'
+
+    between?(move, piece, king.pos)
+  end
+
+  def stalemate
+    # colour has no moves and king is not in check
   end
 end
