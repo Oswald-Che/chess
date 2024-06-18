@@ -47,18 +47,10 @@ class GameBoard
     piece = @board.board[row][col]
     return false if piece == empty
 
-    if piece.name == 'pawn'
-      (piece.moves + piece.capture).include?(move[1])
-    else
-      piece.moves.include?(move[1])
-    end
+    piece.moves.include?(move[1])
   end
 
   def move_piece(move)
     board.update(move)
-  end
-
-  def castle?(var)
-       
   end
 end

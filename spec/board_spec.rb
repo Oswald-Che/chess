@@ -117,4 +117,98 @@ describe Board do
       end
     end
   end
+
+  describe '#mate' do
+    context 'when king can move' do
+      subject(:board_mate) { described_class.new }
+      let(:king) { instance_double(King, colour: 'white', pos: [0, 2], moves: [[0, 3]]) }
+      let(:enemy_piece) { double('piece') }
+      let(:ally_piece) { double('piece') }
+
+      it 'is not mate' do
+        expect(board_mate.mate([king, enemy_piece])).to be false
+      end
+    end
+
+    context 'when ally piece can capture enemy piece' do
+      subject(:board_mate) { described_class.new }
+      let(:king) { instance_double(King, colour: 'white', pos: [0, 2], moves: []) }
+      let(:enemy_piece) { double('piece') }
+      let(:ally_piece) { double('piece') }
+
+      before do
+        board_mate.board[0][0] = ally_piece
+        moves = [[0, 0], [1, 1], [2, 2]]
+        allow(enemy_piece).to receive(:pos).and_return([2, 2])
+        allow(ally_piece).to receive(:colour).and_return('white')
+        allow(ally_piece).to receive(:moves).and_return(moves)
+      end
+
+      it 'is not mate' do
+        expect(board_mate.mate([king, enemy_piece])).to be false
+      end
+    end
+
+    context 'when ally piece can move between enemy piece and king' do
+      subject(:board_mate) { described_class.new }
+      let(:king) { instance_double(King, colour: 'white', pos: [0, 2], moves: []) }
+      let(:enemy_piece) { double('piece') }
+      let(:ally_piece) { double('piece') }
+
+      before do
+        board_mate.board[0][0] = ally_piece
+        moves = [[1, 0], [1, 1], [1, 2]]
+        allow(enemy_piece).to receive(:pos).and_return([2, 2])
+        allow(enemy_piece).to receive(:name).and_return('rook')
+        allow(ally_piece).to receive(:colour).and_return('white')
+        allow(ally_piece).to receive(:moves).and_return(moves)
+      end
+
+      it 'is not mate' do
+        expect(board_mate.mate([king, enemy_piece])).to be false
+      end
+      it 'is not mate' do
+        expect(board_mate).to receive(:between?).at_least(:once)
+        board_mate.mate([king, enemy_piece])
+      end
+    end
+    context 'when ally piece can move between enemy piece and king but enemy piece is knight' do
+      subject(:board_mate) { described_class.new }
+      let(:king) { instance_double(King, colour: 'white', pos: [0, 2], moves: []) }
+      let(:enemy_piece) { double('piece') }
+      let(:ally_piece) { double('piece') }
+
+      before do
+        board_mate.board[0][0] = ally_piece
+        moves = [[1, 0], [1, 1], [1, 2]]
+        allow(enemy_piece).to receive(:pos).and_return([2, 2])
+        allow(enemy_piece).to receive(:name).and_return('knight')
+        allow(ally_piece).to receive(:colour).and_return('white')
+        allow(ally_piece).to receive(:moves).and_return(moves)
+      end
+
+      it 'is mate' do
+        expect(board_mate.mate([king, enemy_piece])).to be true
+      end
+    end
+    context 'when king cannot move and allied piece cannot help' do
+      subject(:board_mate) { described_class.new }
+      let(:king) { instance_double(King, colour: 'white', pos: [0, 2], moves: []) }
+      let(:enemy_piece) { double('piece') }
+      let(:ally_piece) { double('piece') }
+
+      before do
+        board_mate.board[1][0] = ally_piece
+        moves = [[1, 0], [0, 0]]
+        allow(enemy_piece).to receive(:pos).and_return([2, 2])
+        allow(enemy_piece).to receive(:name).and_return('queen')
+        allow(ally_piece).to receive(:colour).and_return('white')
+        allow(ally_piece).to receive(:moves).and_return(moves)
+      end
+
+      it 'is mate' do
+        expect(board_mate.mate([king, enemy_piece])).to be true
+      end
+    end
+  end
 end

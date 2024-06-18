@@ -56,7 +56,7 @@ describe Pawn do
 
       it 'returns the correct moves' do
         capture = [[5, 3], [5, 5]]
-        result = pawn_capture.capture_moves.sort
+        result = pawn_capture.capture_moves{ true }.sort
         expect(result).to eq(capture)
       end
     end
@@ -65,7 +65,7 @@ describe Pawn do
 
       it 'returns the correct moves' do
         capture = [[7, 3], [7, 5]]
-        result = pawn_capture.capture_moves.sort
+        result = pawn_capture.capture_moves{ true }.sort
         expect(result).to eq(capture)
       end
     end
@@ -75,7 +75,7 @@ describe Pawn do
     subject(:pawn_name) { described_class.new(nil, 'white') }
 
     it 'returns class name' do
-      expect(pawn_name.name).to eq('Pawn')
+      expect(pawn_name.name).to eq('pawn')
     end
   end
 end

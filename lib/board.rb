@@ -93,25 +93,34 @@ class Board
     nil
   end
 
-  def mate(array, bool = nil)
+  def mate(array)
     king = array[0]
     return false if king.moves.any?
 
     iterate_board do |piece|
       next if piece.colour != king.colour
-      return false if piece.moves.include?(array[1])
+      return false if piece.moves.include?(array[1].pos)
 
-      piece.moves.each { |move| method(king, array[1], move) }
+      piece.moves.each do |move|
+        return false unless method(move, array[1], king)
+      end
     end
+    true
   end
 
-  def method(king, piece, move)
-    return false if piece.name == 'knight'
+  def method(move, piece, king)
+    return true if %w[knight pawn].include?(piece.name)
 
-    between?(move, piece, king.pos)
+    !(same_line?(move, piece.pos, king.pos) && between?(move, piece.pos, king.pos))
   end
 
-  def stalemate
+  def stalemate(colour)
     # colour has no moves and king is not in check
+    iterate_board do |piece|
+      next if piece.colour != colour
+
+      return false if piece.moves.any?
+    end
+    true
   end
 end
