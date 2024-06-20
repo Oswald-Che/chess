@@ -26,7 +26,7 @@ module Database
   end
 
   def load_save(filename, load_array = nil)
-    File.open("save/#{filename}.txt", 'r') do |file|
+    File.open("save/#{filename}.json", 'r') do |file|
       load_array = JSON.load(file)
     end
     load_array

@@ -1,10 +1,8 @@
 # module to chechk if castling is possible
 module Castling
-  def check_castling(move, type, colour)
-    return false unless check_castle_move(move)
-
-    row = colour == 'WHITE' ? 0 : 7 
-    col = type == 'c' ? 0 : 7
+  def check_castling(type, colour)
+    row = colour == 'WHITE' ? 0 : 7
+    col = type == 'c' ? 7 : 0
     rook = @board.board[row][col]
     king = @board.board[row][4]
     !castling?(king, rook)
@@ -13,7 +11,7 @@ module Castling
   # check if all conditions for castling are met
   def castling?(king, rook)
     king == empty || rook == empty || piece_moved? || 
-      @board.check.nil? || escape_check? || row_empty?
+      @board.check.nil? || escape_check? || row_any?
   end
 
   # check if either rook or king has moved within the game
@@ -26,21 +24,26 @@ module Castling
     num = king.pos[1] > rook.pos[1] ? 2 : 6
     pos = generate_position(king.pos, num)
     pos.each do |position|
-      iterate_board do |piece|
+      @board.iterate_board do |piece|
         next if piece.colour == king.colour
 
-        true if piece.moves.include?(position)
-        true if piece.name == 'pawn' && piece.capture_moves.include?(position)
+        if piece.name == 'pawn'
+          return true if piece.capture_moves.include?(position)
+ 
+          next
+        end
+
+        return true if piece.moves.include?(position)
       end
     end
     false
   end
 
-  # check if space between king and rook is empty
-  def row_empty?(king, rook)
+  # check if a piece is between rook and king
+  def row_any?(king, rook)
     pos = generate_position(king.pos, rook.pos[1]) - [rook.pos]
     pos.each do |row, col|
-      true if @board.board[row][col] != empty
+      return true if @board.board[row][col] != empty
     end
     false
   end
@@ -59,7 +62,7 @@ module Castling
 
   # return the corresponding rooks moves during castling
   def rook_castle_move(move, type)
-    rook_col = type == 'c' ? [7, 1] : [0, -2]
+    rook_col = type == 'c' ? [7, 1] : [0, -1]
     row = [move[0], rook_col[0]]
     col = [move[0], move[1] + rook_col[1]]
     [row, col]

@@ -4,10 +4,10 @@ require_relative 'castle'
 
 # class to organise all game pieces and the board
 class GameBoard
-  include Castle
-  attr_reader :empty, :board
+  include Castling
+  attr_reader :empty, :board, :history
 
-  def initialize()
+  def initialize
     @empty = '_'
     @board = Board.new(empty)
     @history = []
@@ -59,8 +59,8 @@ class GameBoard
   end
 
   def update_history(move)
-    piece = @board.board[move[0]][move[1]].name
-    @history = {
+    piece = @board.board[move[0][0]][move[0][1]]
+    @history << {
       name: piece.name,
       colour: piece.colour,
       prev_pos: move[0],
@@ -69,10 +69,10 @@ class GameBoard
   end
 
   def en_passant?(move)
-    piece = @history.last
-    piece[:name] == pawn &&
-      (piece[:prev_pos][1] - piece[:pos][1]).abs == 2 &&
-      (move[0] - piece[:pos][0]).abs == 1
+    piece = history.last
+    piece[:name] == 'pawn' &&
+      (piece[:prev_pos][0] - piece[:pos][0]).abs == 2 &&
+      (move[1] - piece[:pos][1]).abs == 1
   end
 
   def en_passant_move(move)
