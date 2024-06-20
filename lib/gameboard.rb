@@ -1,13 +1,16 @@
 Dir[File.join(__dir__, 'pieces', '*.rb')].sort.each { |file| require file }
 require_relative 'board'
+require_relative 'castle'
 
 # class to organise all game pieces and the board
 class GameBoard
+  include Castle
   attr_reader :empty, :board
 
   def initialize()
-    empty = '_'
+    @empty = '_'
     @board = Board.new(empty)
+    @history = []
   end
 
   def fill_board
@@ -28,7 +31,7 @@ class GameBoard
   end
 
   def update(name, pos, colour)
-    @board.board << check_piece(name, pos, colour)
+    @board.board << check_piece(name, pos, colour) # wrong fix laterf
   end
 
   def check_piece(name, pos, colour)
@@ -51,6 +54,36 @@ class GameBoard
   end
 
   def move_piece(move)
-    board.update(move)
+    @board.move_piece(move)
+    update_history(move)
+  end
+
+  def update_history(move)
+    piece = @board.board[move[0]][move[1]].name
+    @history = {
+      name: piece.name,
+      colour: piece.colour,
+      prev_pos: move[0],
+      pos: move[1]
+    }
+  end
+
+  def en_passant?(move)
+    piece = @history.last
+    piece[:name] == pawn &&
+      (piece[:prev_pos][1] - piece[:pos][1]).abs == 2 &&
+      (move[0] - piece[:pos][0]).abs == 1
+  end
+
+  def en_passant_move(move)
+    piece = @history.last[:pos]
+    move_piece(move)
+    board.board[piece[0]][piece[1]] = empty
+  end
+
+  def castling_move(king_move, type)
+    rook_move = rook_castle_move(king_move[0], type)
+    move_piece(king_move)
+    move_piece(rook_move)
   end
 end
