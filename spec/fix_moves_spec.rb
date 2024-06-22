@@ -309,7 +309,7 @@ describe Board do
     context 'when a rook is given and it is surrounded by allied pieces' do
       subject(:board_fix) { described_class.new }
       let(:piece) { Rook.new([0, 0], 'white') }
-      let(:other_piece) { double(piece) }
+      let(:other_piece) { double('piece') }
 
       before do
         board_fix.board[0][1] = other_piece

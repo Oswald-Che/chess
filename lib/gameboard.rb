@@ -46,10 +46,10 @@ class GameBoard
     end
   end
 
-  def possible_move(move)
+  def possible_move(move, colour)
     row, col = move[0]
     piece = @board.board[row][col]
-    return false if piece == empty
+    return false if piece == empty || piece.colour != colour
 
     piece.moves.include?(move[1])
   end
@@ -70,6 +70,8 @@ class GameBoard
   end
 
   def en_passant?(move)
+    return false if @history == []
+
     piece = history.last
     piece[:name] == 'pawn' &&
       (piece[:prev_pos][0] - piece[:pos][0]).abs == 2 &&

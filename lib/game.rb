@@ -37,18 +37,21 @@ class Game
 
   def make_a_move
     move = method1
-    if move && @gameboard.possible_move(move)
+    return if move.nil?
+
+    if move && @gameboard.possible_move(move, @colour)
       return @gameboard.move_piece(move)
     end
+
     puts 'move not possible'
     make_a_move
   end
 
   def possible_move(move)
     loop do
-      return move if @gameboard.possible_move(move)
+      return move if @gameboard.possible_move(move, @colour)
 
-      puts 'Move is not possible please Try again'
+      puts 'Move is not possible please try again'
       move = user_input
     end
   end
@@ -62,7 +65,7 @@ class Game
     puts '1. yes 2. No'
     return unless gets.chomp.to_i == 1
 
-    puts 'input the name of your save'
+    puts 'input the name of your save file'
   end
 
   def load_saved_game

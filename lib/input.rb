@@ -12,16 +12,16 @@ module Input
   def method2(move, type)
     case type
     in 'e' | 'E' then ep(move)
-    in 'c'| 'C' then castle(moves, type)
-    in 'P, Q, R, B' then promotion(moves)
+    in 'c'| 'C' then castle(move, type)
+    in 'P, Q, R, B' then promotion(move)
     else false
     end
   end
 
   def ep(move)
-    unless @gameboard.en_passant?(move[1])
+    unless @gameboard.en_passant?(move[0])
       puts 'en passant is not possible at this moment, Please enter another move'
-      method1
+      return method1
     end
 
     @gameboard.en_passant_move(move)
@@ -30,7 +30,7 @@ module Input
   def castle(move, type)
     unless a_castle?(move, type) && @gameboard.check_castling(type, @colour)
       puts 'castling is not possible at this moment try another move'
-      method1
+      return method1
     end
 
     @gameboard.castling_move(move, type)
@@ -42,10 +42,9 @@ module Input
     move[0] == [row, 4] && move[1] == [row, 4 + num] 
   end
 
-
   def user_input
     input = player_input
-    special_input(input) if %w[save help].include?(input)
+    return special_input(input) if %w[save help].include?(input.downcase)
     return input if check_input(input)
 
     puts 'Input error make sure your input follows smith\'s notation'
@@ -67,7 +66,15 @@ module Input
     [start, move]
   end
 
-  def special_input() end
+  def special_input(input)
+    if input == 'save'
+      save_a_game
+    elsif input == 'help'
+      help
+    end
+    puts "#{@colour}'s turn"
+    method1
+  end
 
   def player_input
     gets.chomp
