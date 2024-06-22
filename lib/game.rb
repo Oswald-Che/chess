@@ -18,17 +18,30 @@ class Game
 
   def start
     introduction
-    load_saved_game
-    play unless game_end
-
+    @gameboard.fill_board
+    # load_saved_game
+    loop do
+      @gameboard.board.iterate_board(&:delete_moves)
+      @gameboard.board.make_moves
+      play
+      break if game_end
+    end
   end
 
   def play
     swap_colour
     puts "#{@colour}'s turn"
-    move = user_input
-    board.move_piece(move) if possible_move(move)
+    make_a_move
     @gameboard.board.display_board
+  end
+
+  def make_a_move
+    move = method1
+    if move && @gameboard.possible_move(move)
+      return @gameboard.move_piece(move)
+    end
+    puts 'move not possible'
+    make_a_move
   end
 
   def possible_move(move)
@@ -38,6 +51,10 @@ class Game
       puts 'Move is not possible please Try again'
       move = user_input
     end
+  end
+  
+  def swap_colour
+    @colour = @colour != 'WHITE' ? 'WHITE' : 'BLACK'
   end
 
   def save_a_game
@@ -54,6 +71,21 @@ class Game
     return unless gets.chomp.to_i == 1
 
     load_game
+    puts 'game has been loaded'
+    gameboard.board.display
+  end
+
+  def game_end
+    check = @gameboard.board.check
+    if check
+      @gameboard.board.mate(check) ? true : check
+    elsif @gameboard.board.stalemate(@colour)
+      return true
+    end
+    false
   end
 
 end
+
+game = Game.new
+game.start

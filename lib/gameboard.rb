@@ -30,18 +30,19 @@ class GameBoard
     end
   end
 
-  def update(name, pos, colour)
-    @board.board << check_piece(name, pos, colour) # wrong fix laterf
+  def update_gamebaord(board, history)
+    @board.board = board
+    @history = history
   end
 
-  def check_piece(name, pos, colour)
+  def check_piece(name, pos, colour, moved)
     case name
-    when 'king' then King.new(pos, colour)
-    when 'queen' then Queen.new(pos, colour)
-    when 'rook' then Rook.new(pos, colour)
-    when 'bishop' then Bishop.new(pos, colour)
-    when 'knight' then Queen.new(pos, colour)
-    when 'pawn' then Pawn.new(pos, colour)
+    when 'king' then King.new(pos, colour, moved)
+    when 'queen' then Queen.new(pos, colour, moved)
+    when 'rook' then Rook.new(pos, colour, moved)
+    when 'bishop' then Bishop.new(pos, colour, moved)
+    when 'knight' then Queen.new(pos, colour, moved)
+    when 'pawn' then Pawn.new(pos, colour, moved)
     end
   end
 
@@ -54,8 +55,8 @@ class GameBoard
   end
 
   def move_piece(move)
-    @board.move_piece(move)
     update_history(move)
+    @board.move_piece(move)
   end
 
   def update_history(move)

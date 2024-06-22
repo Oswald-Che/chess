@@ -59,6 +59,27 @@ describe Board do
       end
     end
 
+    context 'when king\' moves and opposing pawn move intersect' do
+      subject(:board_fix_king) { described_class.new }
+      let(:king) { instance_double(King, colour: 'white', moves: [[0, 2], [0, 4]])}
+      let(:pawn) { instance_double(Pawn, colour: 'black', name: 'pawn') }
+
+      before do
+        moves = []
+        captures = [[0, 2], [0, 4]]
+        board_fix_king.board[1][3] = pawn
+        allow(board_fix_king).to receive(:select_kings).and_return([king])
+        allow(pawn).to receive(:moves).and_return(moves)
+        allow(pawn).to receive(:capture_moves).and_return(captures)
+      end
+
+      it 'removes intersecting moves' do
+        expect(king).to receive(:remove_move).with([0, 4])
+        expect(king).to receive(:remove_move).with([0, 2])
+        board_fix_king.fix_king_moves
+      end
+    end
+
 
     context 'when king\' moves and opposing king move intersect' do
       subject(:board_fix_king) { described_class.new }

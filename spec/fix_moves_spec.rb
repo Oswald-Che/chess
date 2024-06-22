@@ -213,7 +213,7 @@ describe Board do
         board_line.board[1][0] = other_piece
       end
 
-      it 'returns true' do
+      it 'returns false' do
         move = [1, 0]
         board = board_line.board
         expect(board_line.line_move(piece, move, board)).to be false
@@ -235,7 +235,7 @@ describe Board do
         board_line.board[3][2] = other_piece
       end
 
-      it 'returns true' do
+      it 'returns false' do
         move = [2, 1]
         board = board_line.board
         expect(board_line.line_move(piece, move, board)).to be false
@@ -259,7 +259,7 @@ describe Board do
         board_line.board[3][2] = other_piece
       end
 
-      it 'returns true' do
+      it 'returns false' do
         move = [1, 0]
         board = board_line.board
         expect(board_line.line_move(piece, move, board)).to be false
@@ -314,7 +314,7 @@ describe Board do
       before do
         board_fix.board[0][1] = other_piece
         board_fix.board[1][0] = other_piece
-        allow(other_piece).to receive(:colour).and_return('black')
+        allow(other_piece).to receive(:colour).and_return('WHITE')
       end
       it 'returns no moves' do
         moves = []

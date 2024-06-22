@@ -31,7 +31,9 @@ module FixMoves
     bool = true
     matches = find_match(piece, board)
     matches.each do |match|
-      return false unless same_line?(move, match, piece.pos) && between?(move, match, piece.pos)
+      next unless same_line?(move, match, piece.pos)
+
+      return false if between?(match, piece.pos, move)
 
       if match == move
         bool = piece.colour != board[match[0]][match[1]].colour
@@ -44,8 +46,18 @@ module FixMoves
 
   # check if move and match are on the line
   def same_line?(move, match, piece)
-    ((move[0] - match[0]).abs == (move[1] - match[1]).abs || move[0] == match[0] || move[1] == match[1]) &&
+    (same_daigonal(move, match, piece) || same_straight(move, match, piece)) &&
       !between?(piece, match, move)
+  end
+
+  def same_daigonal(move, match, piece)
+    (move[0] - match[0]).abs == (move[1] - match[1]).abs &&
+      (move[0] - piece[0]).abs == (move[1] - piece[1]).abs
+  end
+
+  def same_straight(move, match, piece)
+    move[0] == match[0] && move[0] == piece[0] ||
+      move[1] == match[1] && move[1] == piece[1]
   end
 
   # check if move is between piece and match
@@ -54,8 +66,10 @@ module FixMoves
   end
 
   def include?(num1, num2, num3)
+    add = num2 < num3 ? -1 : 1
+    num3 += add
     arr = [num2, num3].sort
-    (arr[0]...arr[1]).include?(num1)
+    (arr[0]..arr[1]).include?(num1)
   end
 
   # find all possible psotion in which the moves of a piece passing over another piece

@@ -2,7 +2,7 @@ require_relative 'fix_moves'
 # class to store all game pieces
 class Board
   include FixMoves
-  attr_reader :empty, :board
+  attr_accessor :empty, :board
 
   def initialize(empty = '_')
     @empty = empty
@@ -10,12 +10,14 @@ class Board
   end
 
   def display_board
-    board.reverse.each do |row|
+    board.reverse.each_with_index do |row, i|
+      print "#{8 - i} "
       row.each do |piece|
         piece == empty ? print("#{empty} ") : print("#{piece.symbol} ")
       end
       print "\n"
     end
+    puts '  a b c d e f g h'
   end
 
   def fill(first_piece, second_piece = nil)
@@ -50,7 +52,8 @@ class Board
     select_kings.each do |king|
       king.moves.each do |move|
         iterate_board do |piece|
-          next unless piece.colour != king.colour && piece.moves.include?(move)
+          next unless piece.colour != king.colour &&
+                      (piece.moves.include?(move) || piece.name == 'pawn' && piece.capture_moves.include?(move))
 
           king.remove_move(move)
           piece.remove_move(move) if piece.name == 'king'
@@ -77,7 +80,7 @@ class Board
   def move_piece(move)
     row, col = move[0]
     piece = @board[row][col]
-    update_baord(move[1], piece)
+    update_board(move[1], piece)
     @board[row][col] = empty
     piece.update_position(move[1])
   end

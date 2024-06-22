@@ -11,18 +11,24 @@ module Database
     end
   end
 
-  def make_save
-    save_array = []
+  def make_save(save_hash = {}, save_array = [])
+    save_hash[:history] = @gameboard.history
+    save_hash[:colour] = @colour
     @gameboard.board.each do |piece|
       next(save_array << piece) if piece == @gameboard.empty
 
-      save_array << {
-        name: piece.name,
-        pos: piece.pos,
-        colour: piece.colour
-      }
+      save_array << convert_board(piece)
     end
-    save_array
+    save_hash[:board] = save_array
+  end
+
+  def convert_board(piece)
+    {
+      name: piece.name,
+      pos: piece.pos,
+      colour: piece.colour,
+      moved: piece.moved
+    }
   end
 
   def load_save(filename, load_array = nil)
@@ -44,12 +50,15 @@ module Database
   end
 
   def load_game
-    load_array = load_save(input_save)
-    @gameboard.board = []
-    load_array.each do |piece|
-      gameboard.board << piece if piece == gameboard.empty
+    load_hash = load_save(input_save)
+    history = load_hash(:history)
+    board = load_hash[:board].map do |piece|
+      next(piece) if piece == @gameboard.empty
 
-      @gameboard.update(piece[:name], piece[:pos], piece[:colour])
+      check_piece(piece[:name], piece[:pos], piece[:colour], piece[:moved])
     end
+    board = board.each_slice(8).to_a
+    @gameboard.update_baord(board, history)
+    @colour = load_hash[:colour]
   end
 end
