@@ -58,14 +58,14 @@ class GameBoard
     update_history(move)
     piece = return_piece(move[0])
     @board.move_piece(move)
-    promotion(piece) if piece.name == 'pawn' && piece.promotion?(move[1])
+    promote(piece) if piece.name == 'pawn' && piece.promotion?(move[1])
   end
 
   def promote(pawn)
     piece_name = pawn.ask_promotion
     piece = check_piece(piece_name, pawn.pos, pawn.colour, pawn.moved)
     row, col = pawn.pos
-    board.baord[row][col] = piece
+    board.board[row][col] = piece
   end
 
   def update_history(move)

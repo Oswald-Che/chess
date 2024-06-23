@@ -24,8 +24,7 @@ class Pawn < Piece
   end
 
   def promotion?(move)
-    pos[0] == 6 && move[0] == 7 ||
-      pos[0] == 1 && move[0] == 0 
+    pos[0] == 7 || pos[0] == 0
   end
 
   def ask_promotion
