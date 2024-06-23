@@ -56,11 +56,20 @@ class GameBoard
 
   def move_piece(move)
     update_history(move)
+    piece = return_piece(move[0])
     @board.move_piece(move)
+    promotion(piece) if piece.name == 'pawn' && piece.promotion?(move[1])
+  end
+
+  def promote(pawn)
+    piece_name = pawn.ask_promotion
+    piece = check_piece(piece_name, pawn.pos, pawn.colour, pawn.moved)
+    row, col = pawn.pos
+    board.baord[row][col] = piece
   end
 
   def update_history(move)
-    piece = @board.board[move[0][0]][move[0][1]]
+    piece = return_piece(move[0])
     @history << {
       name: piece.name,
       colour: piece.colour,
@@ -88,5 +97,10 @@ class GameBoard
     rook_move = rook_castle_move(king_move[0], type)
     move_piece(king_move)
     move_piece(rook_move)
+  end
+
+  def return_piece(move)
+    row, col = move
+    board.board[row][col]
   end
 end

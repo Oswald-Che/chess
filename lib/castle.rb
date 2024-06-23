@@ -11,7 +11,7 @@ module Castling
   # check if all conditions for castling are met
   def castling?(king, rook)
     king == empty || rook == empty || piece_moved?(king, rook) ||
-      @board.check.nil? || escape_check?(king, rook) || row_any?(king, rook)
+      !@board.check.nil? || escape_check?(king, rook) || row_any?(king, rook)
   end
 
   # check if either rook or king has moved within the game
@@ -28,7 +28,7 @@ module Castling
         next if piece.colour == king.colour
 
         if piece.name == 'pawn'
-          return true if piece.capture_moves.include?(position)
+          return true if piece.capture_moves { true }.include?(position)
  
           next
         end
