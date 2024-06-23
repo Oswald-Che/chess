@@ -118,6 +118,12 @@ describe Board do
         piece = [3, 4]
         expect(board_same.same_line?(move, match, piece)).to be true
       end
+      it 'returns true' do
+        move = [5, 4]
+        match = [5, 4]
+        piece = [6, 5]
+        expect(board_same.same_line?(move, match, piece)).to be true
+      end
     end
     context 'when move and a match are on the same horizontal line' do
       subject(:board_same) { described_class.new }
@@ -283,10 +289,30 @@ describe Board do
         board_line.board[3][2] = other_piece
       end
 
+      it 'recieves colour' do
+        move = [3, 2]
+        board = board_line.board
+        expect(piece).to receive(:colour)
+        board_line.line_move(piece, move, board)
+      end
+
       it 'returns true' do
         move = [3, 2]
         board = board_line.board
         expect(board_line.line_move(piece, move, board)).to be true
+      end
+    end
+  end
+
+  describe '#same_diagonal' do
+    context 'when three points are on the same diagonal line' do 
+      subject(:diagonal) { described_class.new }
+
+      it 'returns true' do
+        point1 = [5, 4]
+        point2 = [5, 4]
+        point3 = [6, 5]
+        expect(diagonal.same_daigonal(point1, point2, point3)).to be true
       end
     end
   end

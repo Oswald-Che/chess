@@ -19,7 +19,7 @@ class Game
   def start
     introduction
     @gameboard.fill_board
-    # load_saved_game
+    load_saved_game
     loop do
       @gameboard.board.iterate_board(&:delete_moves)
       @gameboard.board.make_moves
@@ -66,6 +66,7 @@ class Game
     return unless gets.chomp.to_i == 1
 
     puts 'input the name of your save file'
+    save_game
   end
 
   def load_saved_game
@@ -73,9 +74,10 @@ class Game
     puts '1. yes 2. No'
     return unless gets.chomp.to_i == 1
 
+    swap_colour
     load_game
     puts 'game has been loaded'
-    gameboard.board.display
+    @gameboard.board.display_board
   end
 
   def game_end

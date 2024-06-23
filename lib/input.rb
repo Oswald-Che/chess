@@ -73,7 +73,7 @@ module Input
       help
     end
     puts "#{@colour}'s turn"
-    method1
+    user_input
   end
 
   def player_input

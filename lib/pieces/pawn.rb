@@ -23,7 +23,7 @@ class Pawn < Piece
     end
   end
 
-  def promotion?(move)
+  def promotion?
     pos[0] == 7 || pos[0] == 0
   end
 
