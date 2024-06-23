@@ -14,6 +14,11 @@ class Game
 
   def introduction
     puts 'Welcome to command Line chess'
+    @gameboard.board.display_board
+    puts 'Game is played using smith\'s notation e.g e2e4'
+    puts 'use C or c for queens side and King side castling and E for enpassant'
+    puts 'Input save in between rounds to save the game'
+    puts 'Input help to display game rules'
   end
 
   def start
@@ -83,7 +88,8 @@ class Game
   def game_end
     check = @gameboard.board.check
     if check
-      @gameboard.board.mate(check) ? true : check
+      return @gameboard.board.mate(check) ? true : check
+      puts 'Game is in check'
     elsif @gameboard.board.stalemate(@colour)
       return true
     end
@@ -91,6 +97,3 @@ class Game
   end
 
 end
-
-game = Game.new
-game.start
